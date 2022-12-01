@@ -1442,7 +1442,6 @@ def defectdojo_import(request,pk,ddpk):
         #Save Finding
         finding_to_DB = DB_Finding(report=DB_report_query, finding_id=finding_hash_code, status = 'Open', title=finding_title, severity=finding_severity, cvss_base_score=finding_cvssv3, cvss_score=finding_cvssv3_score, description=finding_final_description, location=finding_file_path, impact=finding_impact, recommendation=finding_mitigation, references=finding_references, cwe=cweDB)
         finding_to_DB.save()
-
     return redirect('report_view', pk=pk)
 
 @login_required

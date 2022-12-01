@@ -43,7 +43,7 @@ urlpatterns = [
     path('findings/defectdojo/products/<int:pk>', views.defectdojo_products, name='defectdojo_products'),
     path('findings/defectdojo/import/<int:pk>/<int:ddpk>', views.defectdojo_import, name='defectdojo_import'),
     path('findings/defectdojo/tests/<int:pk>', views.defectdojo_tests, name='defectdojo_tests'),
-    path('findings/defectdojo/import_test/<int:pk>/<int:ddpk>', views.defectdojo_import, name='defectdojo_import'),
+    path('findings/defectdojo/import_test/<int:pk>/<int:ddpk>', views.defectdojo_import_test, name='defectdojo_import_test'),
     # Custom Fields
     path('field/add/<int:pk>', views.field_add, name='field_add'),
     path('finding/customfields/<int:pk>', views.fields, name='fields'),
