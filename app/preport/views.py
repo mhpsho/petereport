@@ -1368,6 +1368,33 @@ def defectdojo_products(request,pk):
 
     return render(request, 'findings/defectdojo_products.html', {'DB_report_query': DB_report_query, 'DDproducts_count': DDproducts_count, 'DDproducts': DDproducts, 'DefectDojoURL': DefectDojoURL})
 
+@login_required
+@allowed_users(allowed_roles=['administrator'])
+def defectdojo_tests(request,pk):
+
+    DB_report_query = get_object_or_404(DB_Report, pk=pk)
+    DefectDojoURL = DEFECTDOJO_CONFIG['DefectDojoURL']
+    DefectDojoURLTests = f"{DefectDojoURL}/api/v2/tests/"
+    DefectDojoApiKey = DEFECTDOJO_CONFIG['apiKey']
+
+    headersapi = {'Authorization': DefectDojoApiKey}
+
+    try:
+        r = requests.get(DefectDojoURLTests, headers = headersapi, verify=False)
+    except:
+        return HttpResponseNotFound(f"Not found. Response error from DefectDojo {DefectDojoURL}")
+
+    if not (r.status_code == 200 or r.status_code == 201):
+        return HttpResponseNotFound(f"No data found. Response error from DefectDojo {DefectDojoURL}")
+
+    jsondata = json.loads(r.text)
+
+    DDtests_count = jsondata['count']
+    DDtests = jsondata['results']
+
+    return render(request, 'findings/defectdojo_tests.html', {'DB_report_query': DB_report_query, 'DDtests_count': DDtests_count, 'DDtests': DDtests, 'DefectDojoURL': DefectDojoURL})
+
+
 
 
 @login_required
@@ -1377,6 +1404,55 @@ def defectdojo_import(request,pk,ddpk):
     DB_report_query = get_object_or_404(DB_Report, pk=pk)
     DefectDojoURL = DEFECTDOJO_CONFIG['DefectDojoURL']
     DefectDojoURLProducts = f"{DefectDojoURL}/api/v2/products/{ddpk}"
+    DefectDojoApiKey = DEFECTDOJO_CONFIG['apiKey']
+
+    headersapi = {'Authorization': DefectDojoApiKey}
+
+    r = requests.get(DefectDojoURLProducts, headers = headersapi, verify=False)
+
+    if not (r.status_code == 200 or r.status_code == 201):
+        return HttpResponseNotFound("Not found. Response error from DefectDojo")
+
+    jsondata = json.loads(r.text)
+    DDproduct_findings = jsondata['findings_list']
+
+    for finding in DDproduct_findings:
+        DefectDojoURLFindings = f"{DefectDojoURL}/api/v2/findings/{finding}"
+        r = requests.get(DefectDojoURLFindings, headers = headersapi, verify=False)
+
+        jsondata = json.loads(r.text)
+
+        finding_id = jsondata['id']
+        finding_title = jsondata['title'] or ""
+        finding_cvssv3 = jsondata['cvssv3'] or ""
+        finding_cvssv3_score = jsondata['cvssv3_score'] or 0
+        finding_cwe = jsondata['cwe'] or 0
+        finding_severity = (jsondata['severity']).capitalize() or ""
+        finding_description = jsondata['description'] or ""
+        finding_mitigation= jsondata['mitigation'] or ""
+        finding_impact = jsondata['impact'] or ""
+        finding_steps_to_reproduce = jsondata['steps_to_reproduce'] or ""
+        finding_references = jsondata['references'] or ""
+        finding_hash_code = jsondata['hash_code'] or uuid.uuid4()
+        finding_file_path = jsondata['file_path'] or ""
+
+        finding_final_description = finding_description + "\n----------\n" + finding_steps_to_reproduce
+
+        cweDB = DB_CWE.objects.filter(cwe_id=finding_cwe).first() or DB_CWE.objects.filter(cwe_id=0).first()
+
+        #Save Finding
+        finding_to_DB = DB_Finding(report=DB_report_query, finding_id=finding_hash_code, status = 'Open', title=finding_title, severity=finding_severity, cvss_base_score=finding_cvssv3, cvss_score=finding_cvssv3_score, description=finding_final_description, location=finding_file_path, impact=finding_impact, recommendation=finding_mitigation, references=finding_references, cwe=cweDB)
+        finding_to_DB.save()
+
+    return redirect('report_view', pk=pk)
+
+@login_required
+@allowed_users(allowed_roles=['administrator'])
+def defectdojo_import(request,pk,ddpk):
+
+    DB_report_query = get_object_or_404(DB_Report, pk=pk)
+    DefectDojoURL = DEFECTDOJO_CONFIG['DefectDojoURL']
+    DefectDojoURLTests = f"{DefectDojoURL}/api/v2/tests/{ddpk}"
     DefectDojoApiKey = DEFECTDOJO_CONFIG['apiKey']
 
     headersapi = {'Authorization': DefectDojoApiKey}
