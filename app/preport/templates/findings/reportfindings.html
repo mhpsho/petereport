@@ -35,7 +35,8 @@
             <a href="/finding/add/{{ DB_report_query.pk }}"><button type="button" class="btn btn-danger"><i class="fa fa-edit"></i> Add Finding</button></a> 
             <a href="/template/add/finding/{{ DB_report_query.pk }}"><button type="button" class="btn btn-warning"><i class="fa fa-edit"></i> Add Finding from template</button></a> 
             <a href="/findings/upload/{{ DB_report_query.pk }}"><button type="button" class="btn btn-info"><i class="fa fa-upload"></i> Upload Findings</button></a>
-            <a href="/findings/defectdojo/products/{{ DB_report_query.pk }}"><button type="button" class="btn btn-success"><i class="fa fa-upload"></i> Import Findings from DefectDojo</button></a>
+            <a href="/findings/defectdojo/products/{{ DB_report_query.pk }}"><button type="button" class="btn btn-success"><i class="fa fa-upload"></i> Import Products from DefectDojo</button></a>
+            <a href="/findings/defectdojo/tests/{{ DB_report_query.pk }}"><button type="button" class="btn btn-success"><i class="fa fa-upload"></i> Import Tests from DefectDojo</button></a>
           {% endif %}
 
         </div>
