@@ -1390,7 +1390,6 @@ def defectdojo_tests(request,pk):
     jsondata = json.loads(r.text)
 
     DDtests_count = jsondata['count']
-    
     DDtests = jsondata['results']
 
     return render(request, 'findings/defectdojo_tests.html', {'DB_report_query': DB_report_query, 'DDtests_count': DDtests_count, 'DDtests': DDtests, 'DefectDojoURL': DefectDojoURL})
