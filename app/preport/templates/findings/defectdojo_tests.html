@@ -20,7 +20,7 @@
         <div class="col-sm-4">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/product/view/{{ DB_report_query.test.pk}}">{{ DB_report_query.test.name | bleach}}</a></li>
+            <li class="breadcrumb-item"><a href="/product/view/{{ DB_report_query.product.pk}}">{{ DB_report_query.product.name | bleach}}</a></li>
             <li class="breadcrumb-item active"><a href="/report/view/{{ DB_report_query.pk}}">{{ DB_report_query.title | bleach}}</a></li>
           </ol>
         </div>
@@ -52,7 +52,7 @@
                       <tr>
                         <th style="width: 5%">ID</th>
                         <th style="width: 25%">Test Title</th>
-                        <th style="width: 5%">Findings</th>
+                        <th style="width: 5%">Engagement</th>
                         <th style="width: 50%">Description</th>
                         <th style="width: 15%"class="text-center"> Actions</th>
                       </tr>
@@ -62,20 +62,20 @@
                       {% for test in DDtests %}
                       <tr>
                           <td>
-                              {{ product.id }}
+                              {{ test.id }}
                           </td>
                           <td>
-                              {{ product.title  | bleach }}
+                              {{ test.title  | bleach }}
                           </td>
                           <td>
-                              {{ product.findings_count }}
+                              {{ test.engagement | bleach }}
                           </td>
                           <td>
-                              {{ product.description  | bleach}}
+                              {{ test.description  | bleach}}
                           </td>
 
                           <td align="center">
-                            <a href="/findings/defectdojo/import/{{ DB_report_query.pk }}/{{ test.id }}"><button type="button" class="btn btn-primary btn-sm"><i class="fa fa-upload"></i> Import Findings</button></a>
+                            <a href="/findings/defectdojo/import_test/{{ DB_report_query.pk }}/{{ test.id }}"><button type="button" class="btn btn-primary btn-sm"><i class="fa fa-upload"></i> Import Findings</button></a>
                           </td>
                       </tr>
 

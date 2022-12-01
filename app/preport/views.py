@@ -1390,11 +1390,10 @@ def defectdojo_tests(request,pk):
     jsondata = json.loads(r.text)
 
     DDtests_count = jsondata['count']
+    
     DDtests = jsondata['results']
 
     return render(request, 'findings/defectdojo_tests.html', {'DB_report_query': DB_report_query, 'DDtests_count': DDtests_count, 'DDtests': DDtests, 'DefectDojoURL': DefectDojoURL})
-
-
 
 
 @login_required
@@ -1448,24 +1447,26 @@ def defectdojo_import(request,pk,ddpk):
 
 @login_required
 @allowed_users(allowed_roles=['administrator'])
-def defectdojo_import(request,pk,ddpk):
+def defectdojo_import_test(request,pk,ddpk):
 
     DB_report_query = get_object_or_404(DB_Report, pk=pk)
     DefectDojoURL = DEFECTDOJO_CONFIG['DefectDojoURL']
-    DefectDojoURLTests = f"{DefectDojoURL}/api/v2/tests/{ddpk}"
+    DefectDojoURLTests = f"{DefectDojoURL}/api/v2/findings/%3Ftest={ddpk}"
+#   DefectDojoURLTests = f"{DefectDojoURL}/api/v2/tests/{ddpk}"
     DefectDojoApiKey = DEFECTDOJO_CONFIG['apiKey']
 
     headersapi = {'Authorization': DefectDojoApiKey}
 
-    r = requests.get(DefectDojoURLProducts, headers = headersapi, verify=False)
+    r = requests.get(DefectDojoURLTests, headers = headersapi, verify=False)
 
     if not (r.status_code == 200 or r.status_code == 201):
         return HttpResponseNotFound("Not found. Response error from DefectDojo")
 
     jsondata = json.loads(r.text)
-    DDproduct_findings = jsondata['findings_list']
+    DDtest_findings = jsondata['results']
+#   DDproducts = jsondata['results']
 
-    for finding in DDproduct_findings:
+    for finding in DDtest_findings:
         DefectDojoURLFindings = f"{DefectDojoURL}/api/v2/findings/{finding}"
         r = requests.get(DefectDojoURLFindings, headers = headersapi, verify=False)
 
