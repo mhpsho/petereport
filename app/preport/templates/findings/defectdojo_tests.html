@@ -20,7 +20,7 @@
         <div class="col-sm-4">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/test/view/{{ DB_report_query.test.pk}}">{{ DB_report_query.test.name | bleach}}</a></li>
+            <li class="breadcrumb-item"><a href="/product/view/{{ DB_report_query.test.pk}}">{{ DB_report_query.test.name | bleach}}</a></li>
             <li class="breadcrumb-item active"><a href="/report/view/{{ DB_report_query.pk}}">{{ DB_report_query.title | bleach}}</a></li>
           </ol>
         </div>
@@ -33,7 +33,7 @@
     <div class="container-fluid">
       <div class="card card-outline card-danger">
         <div class="card-header">
-          <h3 class="card-title">{{DDtests_count}} DefectDojo Testss</h3>
+          <h3 class="card-title">{{DDtests_count}} DefectDojo Tests</h3>
 
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -62,16 +62,16 @@
                       {% for test in DDtests %}
                       <tr>
                           <td>
-                              {{ test.id }}
+                              {{ product.id }}
                           </td>
                           <td>
-                              {{ test.title  | bleach }}
+                              {{ product.title  | bleach }}
                           </td>
                           <td>
-                              {{ test.findings_count }}
+                              {{ product.findings_count }}
                           </td>
                           <td>
-                              {{ test.description  | bleach}}
+                              {{ product.description  | bleach}}
                           </td>
 
                           <td align="center">
